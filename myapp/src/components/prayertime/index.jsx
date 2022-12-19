@@ -5,8 +5,8 @@ import { useState } from 'react'
 import PrayerCard from '../prayercard'
 
 function Prayertime() {
-    const [city, setCity] = useState("Karachi")
-    const [country, setCountry] = useState("Pakistan")
+    const [city, setCity] = useState("")
+    const [country, setCountry] = useState("")
     const [data, setData] = useState([])
 
     const submithandler = (e) => {
@@ -14,21 +14,27 @@ function Prayertime() {
         e.preventDefault()
         axios({
             method: "get",
-            url: `http://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=8`
+             url: `http://api.aladhan.com/v1/calendarByCity?city=${city}&country=${country}&method=2&current`
+            
         })
-            .then(res => {
-                console.log(res.data.data)
-                setData(res.data.data)
+            .then(response => {
+                console.log(response.data.data)
+                setData(response.data.data)
+               
+              
             })
             .catch(err => {
                 console.log(err)
             })
     }
 
-
+   
+   
 
     return (
         <div>
+             <h1>PRAYER TIMING APP</h1>
+
             <form onSubmit={submithandler}>
                 <input type="text" placeholder='enter your country' onChange={(e) => {
                     setCountry(e.target.value)
@@ -38,19 +44,24 @@ function Prayertime() {
                 }} />
                 <button>prayer time</button>
             </form>
+            
 
+           
+           
 
           <div>
-            {data.map((eachdata, index) => (
+            {data?.map((eachdata, index) => (
                 <PrayerCard
-
-                    fajr={eachdata.fajr}
-                    Dhuhr={eachdata.Dhuhr}
-                    Asr={eachdata.Asr}
-                    Maghrib={eachdata.Maghrib}
-                    Isha={eachdata.Isha}
-                    Sunrise={eachdata.Sunrise}
-                    Sunset={eachdata.Sunset}
+                    key = {index}
+                    date = {eachdata.date.readable}
+                    fajr={eachdata.timings.Fajr}
+                    Dhuhr={eachdata.timings.Dhuhr}
+                    Asr={eachdata.timings.Asr}
+                    Maghrib={eachdata.timings.Maghrib}
+                    Isha={eachdata.timings.Isha}
+                    Sunrise={eachdata.timings.Sunrise}
+                    Sunset={eachdata.timings.Sunset}
+                    timezone = {eachdata.timezone}
 
 
 
@@ -58,24 +69,12 @@ function Prayertime() {
                 />
             ))}
 
+
             </div>
 
 
 
-            {/* {data.map((eachdata, index)=>(
-          <PrayerCard
-          fajr = {eachdata.fajr}
-          Dhuhr = {eachdata.Dhuhr}
-          Asr = {eachdata.Asr}
-          Maghrib = {eachdata.Maghrib}
-          Isha = {eachdata.Isha}
-          Sunrise = {eachdata.Sunrise}
-          Sunset = {eachdata.Sunset}
-
-           />
-        ))}
-      
- */}
+         
 
 
         </div>
